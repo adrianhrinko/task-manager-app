@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  task-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: task-db
+    platform: ${DB_PLATFORM:-}
+    environment:
+      SA_PASSWORD: "${DB_PASSWORD:-YourStrong!Passw0rd}"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - task-network
+    restart: always
+
+  task-service:
+    build:
+      context: ./backend/Services/TaskService
+      dockerfile: Dockerfile
+    container_name: task-service
+    depends_on:
+      - task-db
+    environment:
+      - ConnectionStrings__TaskDb=Server=task-db;Database=TaskDb;User Id=sa;Password=${DB_PASSWORD:-YourStrong!Passw0rd};
+    ports:
+      - "5001:5001"
+    networks:
+      - task-network
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: task-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - task-service
+    networks:
+      - task-network
+    restart: always
+
+networks:
+  task-network:
+    driver: bridge
