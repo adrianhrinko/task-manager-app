@@ -1,19 +1,22 @@
-# Use Node.js image
-FROM node:18 AS build
+# Development
+FROM node:18 AS debug
 WORKDIR /app
-
-# Copy package files and install dependencies
+EXPOSE 5173 
+EXPOSE 9229
 COPY package.json package-lock.json ./
 RUN npm install
+CMD ["npm", "run", "dev", "--", "--host"]
 
-# Copy the rest of the application
+# Production
+FROM node:18 AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm install
 COPY . .
-
-# Build for production
 RUN npm run build
 
-# Use Nginx for serving React app
-FROM nginx:1.21
+FROM nginx:1.21 AS release
+EXPOSE 5173
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
