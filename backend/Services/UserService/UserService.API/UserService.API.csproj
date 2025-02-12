@@ -8,7 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
   </ItemGroup>
 
+  <Target Name="SwaggerToFile" AfterTargets="Build">
+    <Exec Command="dotnet swagger tofile --output $(MSBuildProjectDirectory)/swagger.json $(OutputPath)$(AssemblyName).dll v1" />
+  </Target>
+  
 </Project>
