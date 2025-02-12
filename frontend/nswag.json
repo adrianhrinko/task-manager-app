@@ -1,0 +1,15 @@
+{
+  "runtime": "Net80",
+  "documentGenerator": {
+    "fromDocument": {
+      "url": "../backend/Services/TaskService/TaskService.API/swagger.json"
+    }
+  },
+  "codeGenerators": {
+    "openApiToTypeScript": {
+      "className": "Client",
+      "template": "Axios",
+      "output": "src/api/client.ts"
+    }
+  }
+} 

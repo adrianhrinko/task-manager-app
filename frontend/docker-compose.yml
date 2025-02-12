@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      dockerfile: Dockerfile
+    container_name: task-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - task-service
+    networks:
+      - task-network
+    restart: always
+
+networks:
+  task-network:
+    name: task-network 
+    external: true  
