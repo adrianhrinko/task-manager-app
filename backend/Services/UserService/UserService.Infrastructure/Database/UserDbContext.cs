@@ -22,7 +22,10 @@ public class UserDbContext(DbContextOptions<UserDbContext> options) : DbContext(
             .HasOne(utr => utr.Team)
             .WithMany(t => t.UserTeamRoles)
             .HasForeignKey(utr => utr.TeamId);
-
+        
+        modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+        modelBuilder.Entity<Team>().HasIndex(t => t.Name).IsUnique(); 
+        
         base.OnModelCreating(modelBuilder);
     }
 }
