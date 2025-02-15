@@ -1,8 +1,8 @@
 namespace Shared;
 
 public record Query(
-    string? Filter,
-    Order? Order,
-    string? OrderBy,
-    int PageNo,
-    int PageSize);
+    string? Filter = null,
+    Order? Order = null,
+    string? OrderBy = null,
+    int PageNo = 1,
+    int PageSize = 10);

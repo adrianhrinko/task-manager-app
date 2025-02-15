@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using UserService.Domain.Repositories;
 using UserService.Infrastructure.Database;
+using UserService.Infrastructure.Repositories;
 
 namespace UserService.Infrastructure;
 
@@ -14,6 +16,9 @@ public static class DependencyInjection
         {
             options.UseSqlServer(configuration.GetConnectionString("UserDb"));
         });
+
+        services.AddScoped<IUserRepository, UserRepository>();
+        
         return services;
     }
     
