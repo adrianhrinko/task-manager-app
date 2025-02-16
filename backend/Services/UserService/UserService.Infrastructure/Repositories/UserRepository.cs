@@ -8,18 +8,12 @@ using UserService.Infrastructure.Mappers;
 
 namespace UserService.Infrastructure.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository(UserDbContext context) : IUserRepository
 {
-    private readonly UserDbContext _context;
-
-    public UserRepository(UserDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<Domain.Entities.User?> GetByIdAsync(Guid id)
     {
-        return await _context.Users
+        return await context.Users
+            .AsNoTracking()
             .Include(u => u.UserTeamRoles)
             .ThenInclude(utr => utr.Team)
             .Select(u => u.Map())
@@ -28,7 +22,8 @@ public class UserRepository : IUserRepository
 
     public async Task<Domain.Entities.User?> GetByEmailAsync(string email)
     {
-        return await _context.Users
+        return await context.Users
+            .AsNoTracking()
             .Include(u => u.UserTeamRoles)
             .ThenInclude(utr => utr.Team)
             .Select(u => u.Map())
@@ -37,7 +32,7 @@ public class UserRepository : IUserRepository
 
     public async Task<PagedList<Domain.Entities.User>> GetAllAsync(Query query)
     {
-        IQueryable<User> userQuery = _context.Users;
+        IQueryable<User> userQuery = context.Users.AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(query.Filter))
         {
@@ -66,45 +61,47 @@ public class UserRepository : IUserRepository
         user.CreatedAt = DateTime.UtcNow;
         user.UpdatedAt = DateTime.UtcNow;
         
-        _context.Users.Add(user.Map());
-        await _context.SaveChangesAsync();
+        context.Users.Add(user.Map());
+        await context.SaveChangesAsync();
         
         return user;
     }
 
     public async Task<Domain.Entities.User> UpdateAsync(Domain.Entities.User user)
     {
-        var existingUser = await _context.Users.FindAsync(user.Id);
+        var existingUser = await context.Users.FindAsync(user.Id);
         if (existingUser == null)
             throw new KeyNotFoundException($"User with ID {user.Id} not found");
 
-        user.CreatedAt = existingUser.CreatedAt;
-        user.UpdatedAt = DateTime.UtcNow;
+        var newUser = user.Map();
 
-        _context.Entry(existingUser).CurrentValues.SetValues(user);
-        await _context.SaveChangesAsync();
+        newUser.CreatedAt = existingUser.CreatedAt;
+        newUser.UpdatedAt = DateTime.UtcNow;
 
-        return user;
+        context.Entry(existingUser).CurrentValues.SetValues(newUser);
+        await context.SaveChangesAsync();
+
+        return newUser.Map();
     }
 
     public async Task DeleteAsync(Guid id)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await context.Users.FindAsync(id);
         if (user == null)
             throw new KeyNotFoundException($"User with ID {id} not found");
 
-        _context.Users.Remove(user);
-        await _context.SaveChangesAsync();
+        context.Users.Remove(user);
+        await context.SaveChangesAsync();
     }
 
     public async Task<bool> ExistsAsync(Guid id)
     {
-        return await _context.Users.AnyAsync(u => u.Id == id);
+        return await context.Users.AsNoTracking().AnyAsync(u => u.Id == id);
     }
 
     public async Task<bool> ExistsByEmailAsync(string email)
     {
-        return await _context.Users.AnyAsync(u => u.Email == email);
+        return await context.Users.AsNoTracking().AnyAsync(u => u.Email == email);
     }
     
     private static Expression<Func<User, object>> GetSortProperty(Query query) =>

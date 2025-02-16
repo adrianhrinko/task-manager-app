@@ -1,5 +1,3 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Asp.Versioning;
 using Shared.API.OpenApi;
 using UserService.API.Endpoints;

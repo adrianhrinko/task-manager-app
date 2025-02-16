@@ -15,4 +15,17 @@ public static class Mappers
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt
             };
+
+    public static Domain.Entities.Team Map(this Database.Entities.Team team)
+        => new(team.Id, team.Name, team.Description, team.CreatedAt, team.UpdatedAt);
+
+    public static Database.Entities.Team Map(this Domain.Entities.Team team)
+        => new()
+        {
+            Id = team.Id,
+            Name = team.Name,
+            Description = team.Description,
+            CreatedAt = team.CreatedAt,
+            UpdatedAt = team.UpdatedAt
+        };
 }

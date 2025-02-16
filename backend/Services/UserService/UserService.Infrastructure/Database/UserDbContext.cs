@@ -24,8 +24,8 @@ public class UserDbContext(DbContextOptions<UserDbContext> options) : DbContext(
             .HasForeignKey(utr => utr.TeamId);
         
         modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
-        modelBuilder.Entity<Team>().HasIndex(t => t.Name).IsUnique(); 
-        
+        modelBuilder.Entity<Team>().HasIndex(t => t.Name); 
+
         base.OnModelCreating(modelBuilder);
     }
 }
