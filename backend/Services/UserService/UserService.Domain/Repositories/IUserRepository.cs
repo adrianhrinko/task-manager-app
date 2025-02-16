@@ -1,4 +1,4 @@
-using Shared;
+using Shared.Domain;
 using UserService.Domain.Entities;
 
 namespace UserService.Domain.Repositories;

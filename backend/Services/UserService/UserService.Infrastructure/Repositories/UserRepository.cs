@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Shared;
+using Shared.Domain;
 using UserService.Domain.Repositories;
 using UserService.Infrastructure.Database;
 using UserService.Infrastructure.Database.Entities;

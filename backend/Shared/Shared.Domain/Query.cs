@@ -1,4 +1,4 @@
-namespace Shared;
+namespace Shared.Domain;
 
 public record Query(
     string? Filter = null,

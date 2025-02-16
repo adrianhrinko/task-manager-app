@@ -1,4 +1,4 @@
-namespace Shared;
+namespace Shared.Domain;
 
 public enum Order
 {

@@ -1,11 +1,11 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "UserService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "version": "1.0"
+    "title": "UserService API",
+    "version": "1"
   },
   "paths": {
-    "/api/users/{id}": {
+    "/api/v1/users/{id}": {
       "get": {
         "tags": [
           "UserService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
@@ -83,7 +83,7 @@
         }
       }
     },
-    "/api/users/by-email/{email}": {
+    "/api/v1/users/by-email/{email}": {
       "get": {
         "tags": [
           "UserService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
@@ -106,7 +106,7 @@
         }
       }
     },
-    "/api/users": {
+    "/api/v1/users": {
       "get": {
         "tags": [
           "UserService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"

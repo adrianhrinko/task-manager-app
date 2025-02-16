@@ -1,4 +1,6 @@
+using Asp.Versioning;
 using Shared;
+using Shared.Domain;
 using UserService.Domain.Entities;
 using UserService.Domain.Repositories;
 
@@ -6,10 +8,10 @@ namespace UserService.API.Endpoints;
 
 public static class UserEndpoints
 {
-    public static IEndpointRouteBuilder MapUserEndpoints(this IEndpointRouteBuilder routes)
+    public static void MapUserEndpoints(this IEndpointRouteBuilder routes)
     {
-        var group = routes.MapGroup("/api/users");
-
+        var group = routes.MapGroup("users");
+        
         group.MapGet("/{id:guid}", async (Guid id, IUserRepository userRepository) =>
         {
             var user = await userRepository.GetByIdAsync(id);
@@ -25,12 +27,12 @@ public static class UserEndpoints
         .WithName("GetUserByEmail");
 
         group.MapGet("/", async ([AsParameters] Query query, IUserRepository userRepository) =>
-        {
-            var users = await userRepository.GetAllAsync(query);
-            return Results.Ok(users);
-        })
-        .WithName("GetAllUsers");
-
+            {
+                var users = await userRepository.GetAllAsync(query);
+                return Results.Ok(users);
+            })
+            .WithName("GetAllUsers");
+        
         group.MapPost("/", async (User user, IUserRepository userRepository) =>
         {
             var createdUser = await userRepository.CreateAsync(user);
@@ -68,7 +70,5 @@ public static class UserEndpoints
             return Results.NoContent();
         })
         .WithName("DeleteUser");
-        
-        return routes;
     }
 }
