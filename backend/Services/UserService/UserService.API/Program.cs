@@ -59,5 +59,6 @@ var versionedGroup = app.MapGroup("/api/v{version:apiVersion}")
     .WithApiVersionSet(apiVersionSet);
 
 versionedGroup.MapUserEndpoints();
+versionedGroup.MapTeamEndpoints();
 
 app.Run();

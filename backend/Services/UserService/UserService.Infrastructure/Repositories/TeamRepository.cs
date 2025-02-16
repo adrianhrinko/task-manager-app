@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain;
+using Shared.Infrastructure;
 using UserService.Domain.Enums;
 using UserService.Domain.Repositories;
 using UserService.Infrastructure.Database;
@@ -13,35 +14,31 @@ public class TeamRepository(UserDbContext context) : ITeamRepository
 {
     public async Task<Domain.Entities.Team?> GetByIdAsync(Guid id)
     {
-        return await context.Teams
+        var teamEntity =  await context.Teams
             .AsNoTracking()
-            .Select(t => t.Map())
             .FirstOrDefaultAsync(t => t.Id == id);
+        
+        return teamEntity?.Map();
     }
 
-    public async Task<PagedList<Domain.Entities.Team>> GetAllAsync(Query query)
+    public  Task<PagedList<Domain.Entities.Team>> GetAllAsync(Query query)
     {
-        IQueryable<Team> teamQuery = context.Teams.AsNoTracking();
-
-        if (!string.IsNullOrWhiteSpace(query.Filter))
+        var teamQuery = context.Teams.AsNoTracking();
+        
+        var sortMappings = new Dictionary<string, Expression<Func<Team, object>>>
         {
-            teamQuery = teamQuery.Where(t =>
-                t.Name.Contains(query.Filter) ||
-                t.Description.Contains(query.Filter));
-        }
+            { "name", t => t.Name },
+            { "createdAt", t => t.CreatedAt },
+        };
+        
+        var filterMappings = new Dictionary<string, Expression<Func<Team, bool>>>
+        {
+            { "name", t => t.Name.Contains(query.Filter) },
+        };
+        
+        teamQuery = teamQuery.ApplyQuery<Team>(query, filterMappings, sortMappings);
 
-        teamQuery = query.Order is Order.Desc ? 
-            teamQuery.OrderByDescending(GetSortProperty(query)) : 
-            teamQuery.OrderBy(GetSortProperty(query));
-
-        var total = await teamQuery.CountAsync();
-        var result = await teamQuery
-            .Skip((query.PageNo - 1) * query.PageSize)
-            .Take(query.PageSize)
-            .Select(t => t.Map())
-            .ToListAsync();
-
-        return new PagedList<Domain.Entities.Team>(result, query.PageNo, query.PageSize, total);
+        return teamQuery.ApplyPaging(query, t => t.Map());
     }
 
     public async Task<Domain.Entities.Team> CreateAsync(Guid userId, Domain.Entities.Team team)
@@ -80,6 +77,34 @@ public class TeamRepository(UserDbContext context) : ITeamRepository
 
         return newTeam.Map();
     }
+    
+    public Task<PagedList<Domain.Entities.TeamMember>> GetTeamMembersAsync(Guid teamId, Query query)
+    {
+        var memberQuery = context.UserTeamRoles
+            .AsNoTracking()
+            .Include(utr => utr.User)
+            .Where(utr => utr.TeamId == teamId);
+
+        var sortMappings = new Dictionary<string, Expression<Func<UserTeamRole, object>>>
+        {
+            { "name", utr => new { utr.User.FirstName, utr.User.LastName } },
+            { "email", utr => utr.User.Email },
+            { "role", utr => utr.Role },
+            { "assigned", utr => utr.AssignedDate }
+        };
+        
+        var filterMappings = new Dictionary<string, Expression<Func<UserTeamRole, bool>>>
+        {
+            { "name", utr => utr.User.FirstName.Contains(query.Filter) || utr.User.LastName.Contains(query.Filter)},
+            { "email", utr => utr.User.Email.Contains(query.Filter) },
+            { "role", utr => utr.Role.ToString().Contains(query.Filter) },
+        };
+        
+        memberQuery = memberQuery.ApplyQuery(query, filterMappings, sortMappings);
+        
+        return memberQuery.ApplyPaging(query, m => m.MapToTeamMember());
+    }
+
 
     public async Task DeleteAsync(Guid id)
     {
@@ -95,12 +120,4 @@ public class TeamRepository(UserDbContext context) : ITeamRepository
     {
         return await context.Teams.AsNoTracking().AnyAsync(t => t.Id == id);
     }
-
-    private static Expression<Func<Team, object>> GetSortProperty(Query query) =>
-        query.OrderBy?.ToLower() switch
-        {
-            "name" => team => team.Name,
-            "createdat" => team => team.CreatedAt,
-            _ => team => team.Id
-        };
-} 
+}

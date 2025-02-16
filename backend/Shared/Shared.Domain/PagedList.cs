@@ -15,4 +15,7 @@ public class PagedList<T>(List<T> items, int page, int pageSize, int totalCount)
     public bool HasNextPage => Page * PageSize < TotalCount;
 
     public bool HasPreviousPage => Page > 1;
+    
+    public PagedList<TResult> MapItems<TResult>(Func<T, TResult> mapFunction)
+        => new PagedList<TResult>(Items.Select(mapFunction).ToList(), Page, PageSize, TotalCount);
 }

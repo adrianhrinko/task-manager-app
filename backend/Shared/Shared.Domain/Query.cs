@@ -1,8 +1,9 @@
 namespace Shared.Domain;
 
 public record Query(
-    string? Filter = null,
-    Order? Order = null,
-    string? OrderBy = null,
+    string Filter = "",
+    string FilterBy = "",
+    bool OrderDesc = false,
+    string OrderBy = "",
     int PageNo = 1,
     int PageSize = 10);

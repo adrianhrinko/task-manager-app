@@ -10,7 +10,7 @@ public class UserTeamRole
     public User User { get; set; }
 
     public Guid TeamId { get; set; }
-    public Team Team { get; set; }
+    public Team Team { get; set; } 
 
     [Required]
     public TeamRole Role { get; set; }

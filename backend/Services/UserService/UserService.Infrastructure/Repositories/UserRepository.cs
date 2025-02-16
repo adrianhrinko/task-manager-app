@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain;
+using Shared.Infrastructure;
 using UserService.Domain.Repositories;
 using UserService.Infrastructure.Database;
 using UserService.Infrastructure.Database.Entities;
@@ -12,48 +13,67 @@ public class UserRepository(UserDbContext context) : IUserRepository
 {
     public async Task<Domain.Entities.User?> GetByIdAsync(Guid id)
     {
-        return await context.Users
+        var userEntity = await context.Users
             .AsNoTracking()
-            .Include(u => u.UserTeamRoles)
-            .ThenInclude(utr => utr.Team)
-            .Select(u => u.Map())
             .FirstOrDefaultAsync(u => u.Id == id);
+
+        return userEntity?.Map();
     }
 
     public async Task<Domain.Entities.User?> GetByEmailAsync(string email)
     {
-        return await context.Users
+        var userEntity = await context.Users
             .AsNoTracking()
-            .Include(u => u.UserTeamRoles)
-            .ThenInclude(utr => utr.Team)
-            .Select(u => u.Map())
             .FirstOrDefaultAsync(u => u.Email == email);
+        
+        return userEntity?.Map();
     }
 
-    public async Task<PagedList<Domain.Entities.User>> GetAllAsync(Query query)
+    public Task<PagedList<Domain.Entities.User>> GetAllAsync(Query query)
     {
         IQueryable<User> userQuery = context.Users.AsNoTracking();
-
-        if (!string.IsNullOrWhiteSpace(query.Filter))
+        
+        var sortMappings = new Dictionary<string, Expression<Func<User, object>>>
         {
-            userQuery = userQuery.Where(u =>
-                u.FirstName.Contains(query.Filter) ||
-                u.LastName.Contains(query.Filter) || 
-                u.Email.Contains(query.Filter));
-        }
+            { "name", u =>  new { u.FirstName, u.LastName }},
+            { "email", u => u.Email },
+            { "createdAt", u => u.CreatedAt },
+        };
+        
+        var filterMappings = new Dictionary<string, Expression<Func<User, bool>>>
+        {
+            { "name", u =>  u.FirstName.Contains(query.Filter) || u.LastName.Contains(query.Filter) },
+            { "email", u => u.Email.Contains(query.Filter) }
+        };
 
-        userQuery = query.Order is Order.Desc ? 
-            userQuery.OrderByDescending(GetSortProperty(query)) : 
-            userQuery.OrderBy(GetSortProperty(query));
+        userQuery = userQuery.ApplyQuery(query, filterMappings, sortMappings);
+        
+        return userQuery.ApplyPaging<User, Domain.Entities.User>(query, u => u.Map());
+    }
+    
+    public Task<PagedList<Domain.Entities.Team>> GetTeamsAsync(Guid userId, Query query)
+    {
+        var teamsQuery = context.UserTeamRoles
+            .AsNoTracking()
+            .Include(utr => utr.Team)
+            .Where(utr => utr.UserId == userId);
 
-        var total = await userQuery.CountAsync();
-        var result = await userQuery
-            .Skip((query.PageNo - 1) * query.PageSize)
-            .Take(query.PageSize)
-            .Select(u => u.Map())
-            .ToListAsync();
-
-        return new PagedList<Domain.Entities.User>(result, query.PageNo, query.PageSize, total);
+        var sortMappings = new Dictionary<string, Expression<Func<UserTeamRole, object>>>
+        {
+            { "name", utr => utr.Team.Name },
+            { "role", utr => utr.Role },
+            { "assigned", utr => utr.AssignedDate }
+        };
+        
+        var filterMappings = new Dictionary<string, Expression<Func<UserTeamRole, bool>>>
+        {
+            { "name", utr => utr.Team.Name.Contains(query.Filter) },
+            { "role", utr => utr.Role.ToString().Contains(query.Filter) },
+        };
+        
+        teamsQuery = teamsQuery.ApplyQuery(query, filterMappings, sortMappings);
+        
+        return teamsQuery.ApplyPaging<UserTeamRole, Domain.Entities.Team>(query, utr => utr.MapToTeam());
     }
 
     public async Task<Domain.Entities.User> CreateAsync(Domain.Entities.User user)
@@ -103,12 +123,4 @@ public class UserRepository(UserDbContext context) : IUserRepository
     {
         return await context.Users.AsNoTracking().AnyAsync(u => u.Email == email);
     }
-    
-    private static Expression<Func<User, object>> GetSortProperty(Query query) =>
-        query.OrderBy?.ToLower() switch
-        {
-            "name" => user => user.FirstName + " " + user.LastName,
-            "email" => product => product.Email,
-            _ => product => product.Id
-        };
 }

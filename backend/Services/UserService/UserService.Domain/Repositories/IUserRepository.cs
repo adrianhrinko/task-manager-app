@@ -27,6 +27,14 @@ public interface IUserRepository
     Task<PagedList<User>> GetAllAsync(Query query);
 
     /// <summary>
+    /// Retrieves a paged list of teams that a user is a member of 
+    /// </summary>
+    /// <param name="userId">The ID of user</param>
+    /// <param name="query">The query parameters for filtering, sorting and pagination</param>
+    /// <returns>A paginated list of teams</returns>
+    Task<PagedList<Team>> GetTeamsAsync(Guid userId, Query query);
+
+    /// <summary>
     /// Creates a new user in the system
     /// </summary>
     /// <param name="user">The user entity to create</param>

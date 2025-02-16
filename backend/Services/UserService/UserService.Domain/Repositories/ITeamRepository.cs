@@ -19,6 +19,14 @@ public interface ITeamRepository
     Task<PagedList<Entities.Team>> GetAllAsync(Query query);
 
     /// <summary>
+    /// Retrieves a paged list of all members in a team
+    /// </summary>
+    /// <param name="teamId">The ID of the team</param>
+    /// <param name="query">The query parameters for filtering, sorting and pagination</param>
+    /// <returns>A paginated list of team members</returns>
+    Task<PagedList<Domain.Entities.TeamMember>> GetTeamMembersAsync(Guid teamId, Query query);
+
+    /// <summary>
     /// Creates a new team in the system
     /// </summary>
     /// <param name="userId">The ID of the user creating the team</param>

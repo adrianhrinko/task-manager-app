@@ -28,4 +28,20 @@ public static class Mappers
             CreatedAt = team.CreatedAt,
             UpdatedAt = team.UpdatedAt
         };
+    
+    public static Domain.Entities.TeamMember MapToTeamMember(this Database.Entities.UserTeamRole userTeamRole)
+        => new(userTeamRole.UserId, 
+            userTeamRole.TeamId, 
+            userTeamRole.User.FirstName, 
+            userTeamRole.User.LastName, 
+            userTeamRole.User.Email, 
+            userTeamRole.Role, 
+            userTeamRole.AssignedDate);
+    
+    public static Domain.Entities.Team MapToTeam(this Database.Entities.UserTeamRole userTeamRole)
+        => new(userTeamRole.TeamId, 
+            userTeamRole.Team.Name, 
+            userTeamRole.Team.Description, 
+            userTeamRole.Team.CreatedAt, 
+            userTeamRole.Team.UpdatedAt);
 }

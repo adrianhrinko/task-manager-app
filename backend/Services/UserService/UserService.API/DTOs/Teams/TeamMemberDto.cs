@@ -1,10 +1,11 @@
+using UserService.API.DTOs.Users;
+using UserService.Domain.Entities;
 using UserService.Domain.Enums;
 
-namespace UserService.Domain.Entities;
+namespace UserService.API.DTOs.Teams;
 
-public class UserTeamRole
+public class TeamMemberDto: UserBaseDto
 {
-    public Guid UserId { get; set; }
     public Guid TeamId { get; set; }
     public TeamRole Role { get; set; }
     public DateTime AssignedDate { get; set; }
