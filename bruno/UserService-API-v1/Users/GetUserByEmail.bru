@@ -1,0 +1,15 @@
+meta {
+  name: GetUserByEmail
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{userServiceBaseUrl}}/api/v1/users/by-email/:email
+  body: none
+  auth: none
+}
+
+params:path {
+  email: 
+}

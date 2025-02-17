@@ -1,0 +1,24 @@
+meta {
+  name: GetTeamMembers
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{userServiceBaseUrl}}/api/v1/teams/:id/members
+  body: none
+  auth: none
+}
+
+params:query {
+  ~Filter: 
+  ~FilterBy: 
+  ~OrderDesc: 
+  ~OrderBy: 
+  ~PageNo: 
+  ~PageSize: 
+}
+
+params:path {
+  id: 
+}

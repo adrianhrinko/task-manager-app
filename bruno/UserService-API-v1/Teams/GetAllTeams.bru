@@ -1,0 +1,20 @@
+meta {
+  name: GetAllTeams
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{userServiceBaseUrl}}/api/v1/teams
+  body: none
+  auth: none
+}
+
+params:query {
+  ~Filter: 
+  ~FilterBy: 
+  ~OrderDesc: 
+  ~OrderBy: 
+  ~PageNo: 
+  ~PageSize: 
+}

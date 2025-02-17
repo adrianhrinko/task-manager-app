@@ -1,0 +1,24 @@
+meta {
+  name: GetUserTeams
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{userServiceBaseUrl}}/api/v1/users/:id/teams
+  body: none
+  auth: none
+}
+
+params:query {
+  ~Filter: 
+  ~FilterBy: 
+  ~OrderDesc: 
+  ~OrderBy: 
+  ~PageNo: 
+  ~PageSize: 
+}
+
+params:path {
+  id: 
+}
