@@ -6,13 +6,18 @@ EXPOSE 5001
 # Build stage
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
-COPY ["TaskService.API/TaskService.API.csproj", "TaskService.API/"]
-COPY ["TaskService.Application/TaskService.Application.csproj", "TaskService.Application/"]
-COPY ["TaskService.Domain/TaskService.Domain.csproj", "TaskService.Domain/"]
-COPY ["TaskService.Infrastructure/TaskService.Infrastructure.csproj", "TaskService.Infrastructure/"]
-RUN dotnet restore "TaskService.API/TaskService.API.csproj"
+COPY ["Services/TaskService/TaskService.API/TaskService.API.csproj", "Services/TaskService/TaskService.API/"]
+COPY ["Services/TaskService/TaskService.Application/TaskService.Application.csproj", "Services/TaskService/TaskService.Application/"]
+COPY ["Services/TaskService/TaskService.Domain/TaskService.Domain.csproj", "Services/TaskService/TaskService.Domain/"]
+COPY ["Services/TaskService/TaskService.Infrastructure/TaskService.Infrastructure.csproj", "Services/TaskService/TaskService.Infrastructure/"]
+
+COPY ["Shared/Shared.API/Shared.API.csproj", "Shared/Shared.API/"]
+COPY ["Shared/Shared.Domain/Shared.Domain.csproj", "Shared/Shared.Domain/"]
+COPY ["Shared/Shared.Infrastructure/Shared.Infrastructure.csproj", "Shared/Shared.Infrastructure/"]
+
+RUN dotnet restore "Services/TaskService/TaskService.API/TaskService.API.csproj"
 COPY . .
-WORKDIR "/src/TaskService.API"
+WORKDIR "/src/Services/TaskService/TaskService.API"
 
 # Debug build
 FROM build AS debug-build

@@ -18,7 +18,7 @@
     <ProjectReference Include="..\UserService.Application\UserService.Application.csproj" />
   </ItemGroup>
 
-  <Target Name="SwaggerToFile" AfterTargets="Build">
+  <Target Name="SwaggerToFile" AfterTargets="Build" Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' != 'true'">
     <Exec Command="dotnet swagger tofile --output $(MSBuildProjectDirectory)/swagger.json $(OutputPath)$(AssemblyName).dll v1" />
   </Target>
   

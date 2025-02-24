@@ -18,8 +18,9 @@ services:
 
   task-service:
     build:
-      context: ./Services/TaskService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./Services/TaskService/Dockerfile
+      target: release
     container_name: task-service
     depends_on:
       - db-server
@@ -33,8 +34,9 @@ services:
 
   user-service:
     build:
-      context: ./Services/UserService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./Services/UserService/Dockerfile
+      target: release
     container_name: user-service
     depends_on:
       - db-server

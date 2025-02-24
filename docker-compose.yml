@@ -1,6 +1,29 @@
 version: "3.8"
 
 services:
+  grafana:
+    image: grafana/grafana-oss
+    container_name: grafana
+    ports:
+      - "3101:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana:/etc/grafana/provisioning
+    depends_on:
+      - loki
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${DB_PASSWORD:-YourStrong!Passw0rd}
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+
+  loki:
+    image: grafana/loki:2.8.2
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki-storage:/loki
+       
   db-server:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: db-server
@@ -18,8 +41,9 @@ services:
 
   task-service:
     build:
-      context: ./Services/TaskService
-      dockerfile: Dockerfile
+      context: ./backend
+      dockerfile: ./Services/TaskService/Dockerfile
+      target: release
     container_name: task-service
     depends_on:
       - db-server
@@ -33,8 +57,9 @@ services:
 
   user-service:
     build:
-      context: ./Services/UserService
-      dockerfile: Dockerfile
+      context: ./backend
+      dockerfile: ./Services/UserService/Dockerfile
+      target: release
     container_name: user-service
     depends_on:
       - db-server
@@ -66,3 +91,5 @@ networks:
 
 volumes:
   taskmanager_sqlserver_data:
+  grafana-storage:
+  loki-storage:

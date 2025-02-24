@@ -11,8 +11,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
   </ItemGroup>
 
-  <Target Name="SwaggerToFile" AfterTargets="Build">
-    <Exec Command="dotnet swagger tofile --output $(MSBuildProjectDirectory)/swagger.json $(OutputPath)$(AssemblyName).dll v1" />
+  <Target Name="SwaggerToFile" AfterTargets="Build" Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' != 'true'">
+    <Exec Command="dotnet swagger tofile --output $(MSBuildProjectDirectory)/swagger.json $(OutputPath)/$(AssemblyName).dll v1" />
   </Target>
 
 </Project>

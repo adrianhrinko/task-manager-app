@@ -18,8 +18,8 @@ services:
 
   task-service:
     build:
-      context: ./Services/TaskService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./Services/TaskService/Dockerfile
       target: debug 
     container_name: task-service
     depends_on:
@@ -37,8 +37,8 @@ services:
 
   user-service:
     build:
-      context: ./Services/UserService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./Services/UserService/Dockerfile
       target: debug 
     container_name: user-service
     depends_on:

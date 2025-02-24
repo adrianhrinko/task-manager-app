@@ -6,13 +6,17 @@ EXPOSE 5001
 # Build stage
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
-COPY ["UserService.API/UserService.API.csproj", "UserService.API/"]
-COPY ["UserService.Application/UserService.Application.csproj", "UserService.Application/"]
-COPY ["UserService.Domain/UserService.Domain.csproj", "UserService.Domain/"]
-COPY ["UserService.Infrastructure/UserService.Infrastructure.csproj", "UserService.Infrastructure/"]
-RUN dotnet restore "UserService.API/UserService.API.csproj"
+COPY ["Services/UserService/UserService.API/UserService.API.csproj", "Services/UserService/UserService.API/"]
+COPY ["Services/UserService/UserService.Application/UserService.Application.csproj", "Services/UserService/UserService.Application/"]
+COPY ["Services/UserService/UserService.Domain/UserService.Domain.csproj", "Services/UserService/UserService.Domain/"]
+COPY ["Services/UserService/UserService.Infrastructure/UserService.Infrastructure.csproj", "Services/UserService/UserService.Infrastructure/"]
+COPY ["Shared/Shared.API/Shared.API.csproj", "Shared/Shared.API/"]
+COPY ["Shared/Shared.Domain/Shared.Domain.csproj", "Shared/Shared.Domain/"]
+COPY ["Shared/Shared.Infrastructure/Shared.Infrastructure.csproj", "Shared/Shared.Infrastructure/"]
+
+RUN dotnet restore "Services/UserService/UserService.API/UserService.API.csproj"
 COPY . .
-WORKDIR "/src/UserService.API"
+WORKDIR "/src/Services/UserService/UserService.API"
 
 # Debug build
 FROM build AS debug-build
