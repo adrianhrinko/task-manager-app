@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Shared.API.ExceptionHandling;
 using Shared.API.OpenApi;
 using UserService.API.Endpoints;
 using UserService.Application;
@@ -46,6 +47,8 @@ if (app.Environment.IsDevelopment())
             options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
         }
     });
+} else {
+    app.UseMiddleware<CustomExceptionMiddleware>();
 }
 
 app.UseHttpsRedirection();
