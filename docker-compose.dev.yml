@@ -6,7 +6,7 @@ services:
     container_name: db-server
     platform: ${DB_PLATFORM:-}
     environment:
-      SA_PASSWORD: "${DB_PASSWORD:-YourStrong!Passw0rd}"
+      SA_PASSWORD: ${DB_PASSWORD:-YourStrong!Passw0rd}
       ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
@@ -24,8 +24,8 @@ services:
       - "5672:5672" 
       - "15672:15672" 
     environment:
-      - RABBITMQ_DEFAULT_USER= "${RMQ_USER:-admin}"
-      - RABBITMQ_DEFAULT_PASS= "${RMQ_PASSWORD:-YourStrong!Passw0rd}"
+      - RABBITMQ_DEFAULT_USER=${RMQ_USER:-admin}
+      - RABBITMQ_DEFAULT_PASS=${RMQ_PASSWORD:-YourStrong!Passw0rd}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 
@@ -44,8 +44,8 @@ services:
       - DOTNET_USE_POLLING_FILE_WATCHER=1
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
-      - RABBITMQ_USER= "${RMQ_USER:-admin}"
-      - RABBITMQ_PASS="${RMQ_PASSWORD:-YourStrong!Passw0rd}"
+      - RABBITMQ_USER=${RMQ_USER:-admin}
+      - RABBITMQ_PASS=${RMQ_PASSWORD:-YourStrong!Passw0rd}
     ports:
       - "5001:8080"
     volumes:
@@ -68,8 +68,8 @@ services:
       - DOTNET_USE_POLLING_FILE_WATCHER=1
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
-      - RABBITMQ_USER= "${RMQ_USER:-admin}"
-      - RABBITMQ_PASS="${RMQ_PASSWORD:-YourStrong!Passw0rd}"
+      - RABBITMQ_USER=${RMQ_USER:-admin}
+      - RABBITMQ_PASS=${RMQ_PASSWORD:-YourStrong!Passw0rd}
     ports:
       - "5002:8080"
     volumes:
