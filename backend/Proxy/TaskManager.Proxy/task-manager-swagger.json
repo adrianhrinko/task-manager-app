@@ -1,11 +1,29 @@
 {
-  "openapi": "3.0.1",
+  "swagger": "2.0",
   "info": {
-    "title": "User API",
-    "version": "1",
-    "x-service-path": "user-service"
+    "title": "Swagger specification",
+    "version": "1.0.0"
   },
   "paths": {
+    "/weatherforecast": {
+      "get": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "GetWeatherForecast",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WeatherForecast"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/users/{id}": {
       "get": {
         "tags": [
@@ -43,18 +61,16 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateUserDto"
+            }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateUserDto"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -176,16 +192,16 @@
           "UserService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
         ],
         "operationId": "CreateUser",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUserDto"
-              }
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateUserDto"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -304,18 +320,16 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateTeamDto"
+            }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTeamDto"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -414,16 +428,16 @@
           "UserService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
         ],
         "operationId": "CreateTeam",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateTeamDto"
-              }
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateTeamDto"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -506,112 +520,128 @@
       }
     }
   },
-  "components": {
-    "schemas": {
-      "CreateTeamDto": {
-        "required": [
-          "createdBy",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "createdBy": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "maxLength": 100,
-            "minLength": 1,
-            "type": "string"
-          },
-          "description": {
-            "maxLength": 500,
-            "type": "string",
-            "nullable": true
-          }
+  "definitions": {
+    "WeatherForecast": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date"
         },
-        "additionalProperties": false
-      },
-      "CreateUserDto": {
-        "required": [
-          "email",
-          "firstName",
-          "lastName"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
-          },
-          "firstName": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string"
-          },
-          "lastName": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string"
-          }
+        "temperatureC": {
+          "type": "integer",
+          "format": "int32"
         },
-        "additionalProperties": false
-      },
-      "UpdateTeamDto": {
-        "required": [
-          "id",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "maxLength": 100,
-            "minLength": 1,
-            "type": "string"
-          },
-          "description": {
-            "maxLength": 500,
-            "type": "string",
-            "nullable": true
-          }
+        "summary": {
+          "type": "string",
+          "x-nullable": true
         },
-        "additionalProperties": false
-      },
-      "UpdateUserDto": {
-        "required": [
-          "email",
-          "firstName",
-          "id",
-          "lastName"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "email": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
-          },
-          "firstName": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string"
-          },
-          "lastName": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string"
-          }
+        "temperatureF": {
+          "type": "integer",
+          "readOnly": true,
+          "format": "int32"
+        }
+      }
+    },
+    "CreateTeamDto": {
+      "type": "object",
+      "required": [
+        "createdBy",
+        "name"
+      ],
+      "properties": {
+        "createdBy": {
+          "type": "string",
+          "format": "uuid"
         },
-        "additionalProperties": false
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 500,
+          "x-nullable": true
+        }
+      }
+    },
+    "CreateUserDto": {
+      "type": "object",
+      "required": [
+        "email",
+        "firstName",
+        "lastName"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "minLength": 1
+        },
+        "firstName": {
+          "type": "string",
+          "maxLength": 50,
+          "minLength": 1
+        },
+        "lastName": {
+          "type": "string",
+          "maxLength": 50,
+          "minLength": 1
+        }
+      }
+    },
+    "UpdateTeamDto": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 500,
+          "x-nullable": true
+        }
+      }
+    },
+    "UpdateUserDto": {
+      "type": "object",
+      "required": [
+        "email",
+        "firstName",
+        "id",
+        "lastName"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "minLength": 1
+        },
+        "firstName": {
+          "type": "string",
+          "maxLength": 50,
+          "minLength": 1
+        },
+        "lastName": {
+          "type": "string",
+          "maxLength": 50,
+          "minLength": 1
+        }
       }
     }
   }

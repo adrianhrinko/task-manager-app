@@ -23,11 +23,11 @@ public static class TeamEndpoints
         .WithName("GetTeamById");
 
         group.MapGet("/", async ([AsParameters] Query query, [FromServices] ITeamRepository teamRepository) =>
-        {
-            var teams = await teamRepository.GetAllAsync(query);
-            return Results.Ok(teams.MapItems(t => t.Map()));
-        })
-        .WithName("GetAllTeams");
+            {
+                var teams = await teamRepository.GetAllAsync(query);
+                return Results.Ok(teams.MapItems(t => t.Map()));
+            })
+            .WithName("GetAllTeams");
         
         group.MapGet("/{id:guid}/members", async (Guid id, [AsParameters] Query query, [FromServices] ITeamRepository teamRepository) =>
             {

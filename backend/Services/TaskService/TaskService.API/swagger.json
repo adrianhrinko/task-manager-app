@@ -1,8 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "version": "1.0"
+    "title": "Task API",
+    "version": "1.0",
+    "x-service-path": "task-service"
   },
   "paths": {
     "/weatherforecast": {

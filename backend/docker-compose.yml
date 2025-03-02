@@ -1,6 +1,18 @@
 version: "3.8"
 
 services:  
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_USER:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD:-YourStrong!Passw0rd}
+    ports:
+      - "8080:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    command: start
+
   rabbitmq:
     image: rabbitmq:3-management 
     container_name: rabbitmq
@@ -78,4 +90,5 @@ networks:
 
 volumes:
   taskmanager_sqlserver_data:
+  keycloak_data:
   rabbitmq_data:

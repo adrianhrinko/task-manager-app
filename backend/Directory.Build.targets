@@ -1,0 +1,29 @@
+<Project>
+  <ItemGroup>
+    <MicroserviceProjects Include="Services/**/*.API.csproj" />
+    <ProxyProjects Include="Proxy/**/*.csproj" />
+  </ItemGroup>
+
+  <!-- Build all microservices first -->
+  <Target Name="BuildAllMicroservices" BeforeTargets="Build" Condition="'$(SolutionPath)' != ''">
+    <Message Importance="high" Text="🚀 Building microservices...$(SolutionPath)" />
+    <MSBuild Projects="@(MicroserviceProjects)" Targets="Build" BuildInParallel="true" />
+  </Target>
+
+  <!-- Gennerate swagger files -->
+  <Target Name="RunSwaggerGeneration" AfterTargets="BuildAllMicroservices" Condition="'$(SolutionPath)' != ''">
+    <Message Importance="high" Text="📄 Running SwaggerToFile in all microservices..." />
+    <MSBuild Projects="@(MicroserviceProjects)" Targets="SwaggerToFile" BuildInParallel="true" />
+  </Target>
+
+  <!-- Merge swagger files -->
+  <Target Name="MergeSwagger" AfterTargets="RunSwaggerGeneration" Condition="'$(SolutionPath)' != ''">
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet script SwaggerMerger.csx" />
+  </Target>
+
+  <!-- Build Proxy -->
+  <Target Name="BuildProxy" AfterTargets="MergeSwagger" Condition="'$(SolutionPath)' != ''">
+    <Message Importance="high" Text="🚀 Building Proxy..." />
+    <MSBuild Projects="@(ProxyProjects)" />
+  </Target>
+</Project>

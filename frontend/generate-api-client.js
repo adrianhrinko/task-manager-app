@@ -2,8 +2,7 @@ import { exec } from 'child_process';
 
 // Define services to generate clients for
 const services = [
-    ['TaskService', '../backend/Services/TaskService/TaskService.API/swagger.json'],
-    // Add more services here in format: ['ServiceName', 'path/to/swagger.json']
+    ['TaskManager', '../backend/task-manager-swagger.json'],
 ];
 
 // Generate clients for each service
