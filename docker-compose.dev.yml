@@ -8,7 +8,7 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_USER:-admin}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD:-YourStrong!Passw0rd}
     ports:
-      - "8080:8080"
+      - "8081:8080"
     volumes:
       - keycloak_data:/opt/keycloak/data
     command: start-dev
@@ -41,6 +41,20 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 
+  proxy:
+    build:
+      context: ./backend
+      dockerfile: ./Proxy/TaskManager.Proxy/Dockerfile
+    container_name: task-manager-proxy
+    ports:
+      - "8080:80"
+    depends_on:
+      - keycloak
+      - task-service
+      - user-service
+    networks:
+      - task-network
+
   task-service:
     build:
       context: ./backend
@@ -59,7 +73,7 @@ services:
       - RABBITMQ_USER=${RMQ_USER:-admin}
       - RABBITMQ_PASS=${RMQ_PASSWORD:-YourStrong!Passw0rd}
     ports:
-      - "5001:8080"
+      - "8082:8080"
     volumes:
       - ./backend/Services/TaskService:/src  
     networks:
@@ -83,7 +97,7 @@ services:
       - RABBITMQ_USER=${RMQ_USER:-admin}
       - RABBITMQ_PASS=${RMQ_PASSWORD:-YourStrong!Passw0rd}
     ports:
-      - "5002:8080"
+      - "8083:8080"
     volumes:
       - ./backend/Services/UserService:/src  
     networks:
