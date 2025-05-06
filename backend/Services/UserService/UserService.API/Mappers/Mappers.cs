@@ -1,6 +1,8 @@
 using UserService.API.DTOs;
+using UserService.API.DTOs.Auth;
 using UserService.API.DTOs.Teams;
 using UserService.API.DTOs.Users;
+using UserService.Domain.Entities;
 using UserService.Infrastructure.Mappers;
 
 namespace UserService.API.Mappers;
@@ -51,4 +53,10 @@ public static class Mappers
             AssignedDate = user.AssignedDate,
             TeamId = user.TeamId
         };
+    
+    public static UserRegistration Map(this UserRegistrationDto user)
+        => new(user.Username, user.Email, user.FirstName, user.LastName, user.Password);
+    
+    public static UserLogin Map(this UserLoginDto user)
+        => new(user.Username, user.Password);
 }

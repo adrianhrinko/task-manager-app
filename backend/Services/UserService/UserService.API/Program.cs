@@ -6,6 +6,9 @@ using UserService.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .AddEnvironmentVariables(); 
+
 builder.Services.AddApiVersioning(options =>
 {
     options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -23,15 +26,13 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =
     options.SerializerOptions.PropertyNameCaseInsensitive = true;
 });
 
-
-
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddApplicationServices(builder.Configuration);
-
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
+
+builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -61,6 +62,7 @@ var apiVersionSet = app.NewApiVersionSet()
 var versionedGroup = app.MapGroup("/api/v{version:apiVersion}")
     .WithApiVersionSet(apiVersionSet);
 
+versionedGroup.MapAuthEndpoints();
 versionedGroup.MapUserEndpoints();
 versionedGroup.MapTeamEndpoints();
 
