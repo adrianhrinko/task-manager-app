@@ -12,6 +12,8 @@ services:
     volumes:
       - keycloak_data:/opt/keycloak/data
     command: start-dev
+    networks:
+      - task-network
 
   db-server:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -40,20 +42,23 @@ services:
       - RABBITMQ_DEFAULT_PASS=${RMQ_PASSWORD:-YourStrong!Passw0rd}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - task-network
 
   proxy:
     build:
       context: ./backend
-      dockerfile: ./Proxy/TaskManager.Proxy/Dockerfile
+      dockerfile: ./Proxy/Dockerfile
     container_name: task-manager-proxy
     ports:
-      - "8080:80"
+      - "8080:8080"
     depends_on:
       - keycloak
       - task-service
       - user-service
     networks:
       - task-network
+    restart: always
 
   task-service:
     build:
@@ -75,7 +80,21 @@ services:
     ports:
       - "8082:8080"
     volumes:
-      - ./backend/Services/TaskService:/src  
+      - ./backend:/src
+      - /src/Services/TaskService/TaskService.API/bin/
+      - /src/Services/TaskService/TaskService.API/obj/
+      - /src/Services/TaskService/TaskService.Application/bin/
+      - /src/Services/TaskService/TaskService.Application/obj/
+      - /src/Services/TaskService/TaskService.Domain/bin/
+      - /src/Services/TaskService/TaskService.Domain/obj/
+      - /src/Services/TaskService/TaskService.Infrastructure/bin/
+      - /src/Services/TaskService/TaskService.Infrastructure/obj/
+      - /src/Shared/Shared.API/bin/
+      - /src/Shared/Shared.API/obj/
+      - /src/Shared/Shared.Domain/bin/
+      - /src/Shared/Shared.Domain/obj/
+      - /src/Shared/Shared.Infrastructure/bin/
+      - /src/Shared/Shared.Infrastructure/obj/
     networks:
       - task-network
 
@@ -96,10 +115,28 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USER=${RMQ_USER:-admin}
       - RABBITMQ_PASS=${RMQ_PASSWORD:-YourStrong!Passw0rd}
+      - Keycloak__Url=http://keycloak:8080
+      - Keycloak__Realm=task-manager
+      - Keycloak__ClientId=admin
+      - Keycloak__ClientSecret=RT4MOjOjdHEnwu3wETDOptdL5ZqbivOn
     ports:
       - "8083:8080"
     volumes:
-      - ./backend/Services/UserService:/src  
+      - ./backend:/src
+      - /src/Services/UserService/UserService.API/bin/
+      - /src/Services/UserService/UserService.API/obj/
+      - /src/Services/UserService/UserService.Application/bin/
+      - /src/Services/UserService/UserService.Application/obj/
+      - /src/Services/UserService/UserService.Domain/bin/
+      - /src/Services/UserService/UserService.Domain/obj/
+      - /src/Services/UserService/UserService.Infrastructure/bin/
+      - /src/Services/UserService/UserService.Infrastructure/obj/
+      - /src/Shared/Shared.API/bin/
+      - /src/Shared/Shared.API/obj/
+      - /src/Shared/Shared.Domain/bin/
+      - /src/Shared/Shared.Domain/obj/
+      - /src/Shared/Shared.Infrastructure/bin/
+      - /src/Shared/Shared.Infrastructure/obj/
     networks:
       - task-network
 

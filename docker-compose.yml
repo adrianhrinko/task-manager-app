@@ -12,7 +12,9 @@ services:
     volumes:
       - keycloak_data:/opt/keycloak/data
     command: start-dev
-  
+    networks:
+      - task-network
+
   grafana:
     image: grafana/grafana-oss
     container_name: grafana
@@ -48,7 +50,9 @@ services:
       - RABBITMQ_DEFAULT_PASS=${RMQ_PASSWORD:-YourStrong!Passw0rd}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
-       
+    networks:
+      - task-network
+      
   db-server:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: db-server
@@ -115,6 +119,10 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USER=${RMQ_USER:-admin}
       - RABBITMQ_PASS=${RMQ_PASSWORD:-YourStrong!Passw0rd}
+      - Keycloak__Url=http://keycloak:8080
+      - Keycloak__Realm=task-manager
+      - Keycloak__ClientId=admin
+      - Keycloak__ClientSecret=RT4MOjOjdHEnwu3wETDOptdL5ZqbivOn
     ports:
       - "8083:8080"
     networks:
