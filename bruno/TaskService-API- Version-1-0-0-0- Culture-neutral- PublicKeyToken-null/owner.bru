@@ -1,0 +1,15 @@
+meta {
+  name: owner
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/task-service/api/v1/projects/owner/:ownerId
+  body: none
+  auth: none
+}
+
+params:path {
+  ownerId: 
+}

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskService.Domain.Entities;
 using TaskService.Domain.Repositories;
+using TaskService.Infrastructure.Database;
 using TaskService.Infrastructure.Mappers;
 
 namespace TaskService.Infrastructure.Repositories;
@@ -16,14 +17,14 @@ public class TaskRepository : ITaskRepository
 
     public async Task<TaskItem?> GetByIdAsync(Guid id)
     {
-        return await _context.Tasks
+        return await _context.TaskItems
             .Select(t => t.Map())
             .FirstOrDefaultAsync(t => t.Id == id);
     }
 
     public async Task<IEnumerable<TaskItem>> GetByEpicIdAsync(Guid epicId)
     {
-        return await _context.Tasks
+        return await _context.TaskItems
             .Include(t => t.Project)
             .Where(t => t.EpicId == epicId)
             .Select(t => t.Map())
@@ -32,7 +33,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<IEnumerable<TaskItem>> GetByProjectIdAsync(Guid projectId)
     {
-        return await _context.Tasks
+        return await _context.TaskItems
             .Include(t => t.Project)
             .Where(t => t.ProjectId == projectId)
             .Select(t => t.Map())
@@ -44,7 +45,7 @@ public class TaskRepository : ITaskRepository
         task.CreatedAt = DateTime.UtcNow;
         task.UpdatedAt = DateTime.UtcNow;
         
-        var entry = await _context.Tasks.AddAsync(task.Map());
+        var entry = await _context.TaskItems.AddAsync(task.Map());
         await _context.SaveChangesAsync();
 
         return entry.Entity.Map();
@@ -52,7 +53,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<Domain.Entities.TaskItem> UpdateAsync(Domain.Entities.TaskItem task)
     {
-        var existingTask = await _context.Tasks.FindAsync(task.Id);
+        var existingTask = await _context.TaskItems.FindAsync(task.Id);
         if (existingTask == null)
             throw new KeyNotFoundException($"Task with ID {task.Id} not found.");
 
@@ -67,16 +68,16 @@ public class TaskRepository : ITaskRepository
 
     public async Task DeleteAsync(Guid id)
     {
-        var task = await _context.Tasks.FindAsync(id);
+        var task = await _context.TaskItems.FindAsync(id);
         if (task != null)
         {
-            _context.Tasks.Remove(task);
+            _context.TaskItems.Remove(task);
             await _context.SaveChangesAsync();
         }
     }
 
     public async Task<bool> ExistsAsync(Guid id)
     {
-        return await _context.Tasks.AnyAsync(t => t.Id == id);
+        return await _context.TaskItems.AnyAsync(t => t.Id == id);
     }
 }

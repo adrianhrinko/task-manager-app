@@ -1,6 +1,7 @@
 using TaskService.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace TaskService.Infrastructure.Database.Entities;
 
@@ -34,8 +35,11 @@ public class Project
     [Required]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
+    public User? Owner { get; set; }
+
+    public Team? Team { get; set; }
+
     public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>();
     
     public ICollection<Epic> Epics { get; set; } = new List<Epic>();
-
 }

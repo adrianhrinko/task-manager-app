@@ -1,0 +1,15 @@
+meta {
+  name: team
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/task-service/api/v1/projects/team/:teamId
+  body: none
+  auth: none
+}
+
+params:path {
+  teamId: 
+}

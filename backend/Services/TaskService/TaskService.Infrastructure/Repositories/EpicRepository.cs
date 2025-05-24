@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskService.Domain.Entities;
 using TaskService.Domain.Repositories;
+using TaskService.Infrastructure.Database;
 using TaskService.Infrastructure.Mappers;
 
 namespace TaskService.Infrastructure.Repositories;

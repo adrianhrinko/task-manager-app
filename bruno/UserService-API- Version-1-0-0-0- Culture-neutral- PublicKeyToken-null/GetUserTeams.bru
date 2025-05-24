@@ -1,11 +1,11 @@
 meta {
-  name: GetTeamMembers
+  name: GetUserTeams
   type: http
-  seq: 6
+  seq: 10
 }
 
 get {
-  url: {{userServiceBaseUrl}}/api/v1/teams/:id/members
+  url: {{baseUrl}}/user-service/api/v1/users/:id/teams
   body: none
   auth: none
 }

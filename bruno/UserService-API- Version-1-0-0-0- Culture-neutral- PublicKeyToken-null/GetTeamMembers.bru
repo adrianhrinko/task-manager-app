@@ -1,11 +1,11 @@
 meta {
-  name: GetAllUsers
+  name: GetTeamMembers
   type: http
-  seq: 5
+  seq: 16
 }
 
 get {
-  url: {{userServiceBaseUrl}}/api/v1/users
+  url: {{baseUrl}}/user-service/api/v1/teams/:id/members
   body: none
   auth: none
 }
@@ -17,4 +17,8 @@ params:query {
   ~OrderBy: 
   ~PageNo: 
   ~PageSize: 
+}
+
+params:path {
+  id: 
 }

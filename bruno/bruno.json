@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "task-manager-app",
+  "name": "Task Manager API",
   "type": "collection",
   "ignore": [
     "node_modules",

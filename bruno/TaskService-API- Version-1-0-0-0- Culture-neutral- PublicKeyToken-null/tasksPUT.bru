@@ -1,0 +1,15 @@
+meta {
+  name: tasksPUT
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/task-service/api/v1/tasks/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 
+}

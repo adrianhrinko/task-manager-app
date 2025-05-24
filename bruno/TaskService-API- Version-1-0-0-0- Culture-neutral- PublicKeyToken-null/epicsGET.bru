@@ -1,11 +1,11 @@
 meta {
-  name: GetTeamById
+  name: epicsGET
   type: http
-  seq: 1
+  seq: 13
 }
 
 get {
-  url: {{userServiceBaseUrl}}/api/v1/teams/:id
+  url: {{baseUrl}}/task-service/api/v1/epics/:id
   body: none
   auth: none
 }

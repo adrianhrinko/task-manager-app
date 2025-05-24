@@ -5,21 +5,491 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/task-service/weatherforecast": {
+    "/task-service/api/v1/tasks/{id}": {
       "get": {
         "tags": [
           "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
         ],
-        "operationId": "GetWeatherForecast",
+        "operationId": "tasksGET",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "tasksPUT",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskItem"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "tasksDELETE",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/task-service/api/v1/tasks/epic/{epicId}": {
+      "get": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "epic",
+        "parameters": [
+          {
+            "name": "epicId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/task-service/api/v1/tasks/project/{projectId}": {
+      "get": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "project",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/task-service/api/v1/tasks": {
+      "post": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "tasksPOST",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskItem"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/task-service/api/v1/projects/{id}": {
+      "get": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "projectsGET",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "projectsPUT",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Project"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "projectsDELETE",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/task-service/api/v1/projects/owner/{ownerId}": {
+      "get": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "owner",
+        "parameters": [
+          {
+            "name": "ownerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/task-service/api/v1/projects/team/{teamId}": {
+      "get": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "team",
+        "parameters": [
+          {
+            "name": "teamId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/task-service/api/v1/projects": {
+      "post": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "projectsPOST",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Project"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/task-service/api/v1/epics/{id}": {
+      "get": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "epicsGET",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "epicsPUT",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Epic"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "epicsDELETE",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/task-service/api/v1/epics/project/{projectId}": {
+      "get": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "project2",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/task-service/api/v1/epics": {
+      "post": {
+        "tags": [
+          "TaskService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "epicsPOST",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Epic"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user-service/api/v1/auth/register": {
+      "post": {
+        "tags": [
+          "UserService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "register",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserRegistrationDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user-service/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "UserService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "login",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserLoginDto"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/WeatherForecast"
-              }
+              "$ref": "#/definitions/AuthToken"
             }
+          }
+        }
+      }
+    },
+    "/user-service/api/v1/auth/refresh": {
+      "post": {
+        "tags": [
+          "UserService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        ],
+        "operationId": "refresh",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RefreshTokenDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -521,25 +991,211 @@
     }
   },
   "definitions": {
-    "WeatherForecast": {
+    "Epic": {
       "type": "object",
       "properties": {
-        "date": {
+        "id": {
           "type": "string",
-          "format": "date"
+          "format": "uuid"
         },
-        "temperatureC": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "summary": {
+        "title": {
           "type": "string",
           "x-nullable": true
         },
-        "temperatureF": {
+        "description": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "state": {
+          "$ref": "#/definitions/State"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Project": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "title": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "description": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "state": {
+          "$ref": "#/definitions/State"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true
+        },
+        "teamId": {
+          "type": "string",
+          "format": "uuid",
+          "x-nullable": true
+        },
+        "ownerId": {
+          "type": "string",
+          "format": "uuid",
+          "x-nullable": true
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "State": {
+      "type": "integer",
+      "format": "int32",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "TaskItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "title": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "description": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "state": {
+          "$ref": "#/definitions/State"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "epicId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "duration": {
+          "type": "string",
+          "format": "date-span",
+          "x-nullable": true
+        },
+        "scheduledAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true
+        },
+        "due": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "assignedTo": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "email": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "firstName": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "lastName": {
+          "type": "string",
+          "x-nullable": true
+        }
+      }
+    },
+    "AuthToken": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "expiresIn": {
           "type": "integer",
-          "readOnly": true,
           "format": "int32"
+        },
+        "refreshExpiresIn": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "tokenType": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "notBeforePolicy": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "scope": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "refreshToken": {
+          "type": "string",
+          "x-nullable": true
         }
       }
     },
@@ -588,6 +1244,15 @@
           "type": "string",
           "maxLength": 50,
           "minLength": 1
+        }
+      }
+    },
+    "RefreshTokenDto": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "x-nullable": true
         }
       }
     },
@@ -640,6 +1305,55 @@
         "lastName": {
           "type": "string",
           "maxLength": 50,
+          "minLength": 1
+        }
+      }
+    },
+    "UserLoginDto": {
+      "type": "object",
+      "required": [
+        "password",
+        "username"
+      ],
+      "properties": {
+        "username": {
+          "type": "string",
+          "minLength": 1
+        },
+        "password": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "UserRegistrationDto": {
+      "type": "object",
+      "required": [
+        "firstName",
+        "lastName",
+        "password",
+        "username"
+      ],
+      "properties": {
+        "username": {
+          "type": "string",
+          "minLength": 1
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "x-nullable": true
+        },
+        "firstName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lastName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "password": {
+          "type": "string",
           "minLength": 1
         }
       }

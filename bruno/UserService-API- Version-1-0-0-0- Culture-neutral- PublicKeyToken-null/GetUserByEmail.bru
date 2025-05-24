@@ -1,11 +1,11 @@
 meta {
   name: GetUserByEmail
   type: http
-  seq: 4
+  seq: 7
 }
 
 get {
-  url: {{userServiceBaseUrl}}/api/v1/users/by-email/:email
+  url: {{baseUrl}}/user-service/api/v1/users/by-email/:email
   body: none
   auth: none
 }

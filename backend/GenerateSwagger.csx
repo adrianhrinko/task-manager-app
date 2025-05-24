@@ -12,6 +12,35 @@ using NSwag;
 string solutionRoot = Directory.GetCurrentDirectory();
 string outputFilePath = Path.Combine(solutionRoot, "task-manager-swagger.json");
 
+// First, build the solution
+Console.WriteLine("🔨 Building solution...");
+var buildProcess = new Process
+{
+    StartInfo = new ProcessStartInfo
+    {
+        FileName = "dotnet",
+        Arguments = "build",
+        UseShellExecute = false,
+        RedirectStandardOutput = true,
+        RedirectStandardError = true,
+        WorkingDirectory = solutionRoot
+    }
+};
+
+buildProcess.Start();
+string output = buildProcess.StandardOutput.ReadToEnd();
+string error = buildProcess.StandardError.ReadToEnd();
+buildProcess.WaitForExit();
+
+if (buildProcess.ExitCode != 0)
+{
+    Console.WriteLine("❌ Build failed!");
+    Console.WriteLine(error);
+    return;
+}
+
+Console.WriteLine("✅ Build completed successfully!");
+
 Console.WriteLine($"📂 Scanning entire solution for Swagger JSON files...");
 
 // Recursively find all `swagger.json` files in the solution

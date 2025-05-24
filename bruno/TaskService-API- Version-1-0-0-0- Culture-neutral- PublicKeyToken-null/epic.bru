@@ -1,0 +1,15 @@
+meta {
+  name: epic
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/task-service/api/v1/tasks/epic/:epicId
+  body: none
+  auth: none
+}
+
+params:path {
+  epicId: 
+}

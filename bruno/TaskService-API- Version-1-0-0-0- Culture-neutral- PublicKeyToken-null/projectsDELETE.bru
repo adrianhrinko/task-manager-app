@@ -1,11 +1,11 @@
 meta {
-  name: DeleteTeam
+  name: projectsDELETE
   type: http
-  seq: 3
+  seq: 9
 }
 
 delete {
-  url: {{userServiceBaseUrl}}/api/v1/teams/:id
+  url: {{baseUrl}}/task-service/api/v1/projects/:id
   body: none
   auth: none
 }
