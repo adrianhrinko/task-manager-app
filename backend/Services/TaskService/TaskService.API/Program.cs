@@ -1,7 +1,13 @@
 using Asp.Versioning;
+using Shared.API.ExceptionHandling;
 using Shared.API.OpenApi;
+using TaskService.API.Endpoints;
+using TaskService.Application;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration
+    .AddEnvironmentVariables(); 
 
 builder.Services.AddApiVersioning(options =>
     {
@@ -26,6 +32,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
+builder.Services.AddApplicationServices(builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,8 +48,22 @@ if (app.Environment.IsDevelopment())
             options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
         }
     });
+} else {
+    app.UseMiddleware<CustomExceptionMiddleware>();
 }
 
 app.UseHttpsRedirection();
+
+var apiVersionSet = app.NewApiVersionSet()
+    .HasApiVersion(new ApiVersion(1))
+    .ReportApiVersions()
+    .Build();
+
+var versionedGroup = app.MapGroup("/api/v{version:apiVersion}")
+    .WithApiVersionSet(apiVersionSet);
+
+versionedGroup.MapTaskEndpoints();
+versionedGroup.MapProjectEndpoints();
+versionedGroup.MapEpicEndpoints();
 
 app.Run();

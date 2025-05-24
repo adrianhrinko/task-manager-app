@@ -31,16 +31,16 @@ public class UserRepository(UserDbContext context) : IUserRepository
 
     public Task<PagedList<Domain.Entities.User>> GetAllAsync(Query query)
     {
-        IQueryable<User> userQuery = context.Users.AsNoTracking();
+        IQueryable<Database.Entities.User> userQuery = context.Users.AsNoTracking();
         
-        var sortMappings = new Dictionary<string, Expression<Func<User, object>>>
+        var sortMappings = new Dictionary<string, Expression<Func<Database.Entities.User, object>>>
         {
             { "name", u =>  new { u.FirstName, u.LastName }},
             { "email", u => u.Email },
             { "createdAt", u => u.CreatedAt },
         };
         
-        var filterMappings = new Dictionary<string, Expression<Func<User, bool>>>
+        var filterMappings = new Dictionary<string, Expression<Func<Database.Entities.User, bool>>>
         {
             { "name", u =>  u.FirstName.Contains(query.Filter) || u.LastName.Contains(query.Filter) },
             { "email", u => u.Email.Contains(query.Filter) }
@@ -48,7 +48,7 @@ public class UserRepository(UserDbContext context) : IUserRepository
 
         userQuery = userQuery.ApplyQuery(query, filterMappings, sortMappings);
         
-        return userQuery.ApplyPaging<User, Domain.Entities.User>(query, u => u.Map());
+        return userQuery.ApplyPaging<Database.Entities.User, Domain.Entities.User>(query, u => u.Map());
     }
     
     public Task<PagedList<Domain.Entities.Team>> GetTeamsAsync(Guid userId, Query query)

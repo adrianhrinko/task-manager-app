@@ -10,21 +10,21 @@ public interface IUserRepository
     /// </summary>
     /// <param name="id">The GUID of the user to retrieve</param>
     /// <returns>The user if found, null otherwise</returns>
-    Task<User?> GetByIdAsync(Guid id);
+    Task<Entities.User?> GetByIdAsync(Guid id);
 
     /// <summary>
     /// Retrieves a user by their email address
     /// </summary>
     /// <param name="email">The email address to search for</param>
     /// <returns>The user if found, null otherwise</returns>
-    Task<User?> GetByEmailAsync(string email);
+    Task<Entities.User?> GetByEmailAsync(string email);
 
     /// <summary>
     /// Retrieves a paged list of all users 
     /// </summary>
     /// <param name="query">The query parameters for filtering, sorting and pagination</param>
     /// <returns>A paginated list of users</returns>
-    Task<PagedList<User>> GetAllAsync(Query query);
+    Task<PagedList<Entities.User>> GetAllAsync(Query query);
 
     /// <summary>
     /// Retrieves a paged list of teams that a user is a member of 
@@ -39,14 +39,14 @@ public interface IUserRepository
     /// </summary>
     /// <param name="user">The user entity to create</param>
     /// <returns>The created user with generated ID</returns>
-    Task<User> CreateAsync(User user);
+    Task<Entities.User> CreateAsync(Entities.User user);
 
     /// <summary>
     /// Updates an existing user's information
     /// </summary>
     /// <param name="user">The user entity with updated information</param>
     /// <returns>The updated user</returns>
-    Task<User> UpdateAsync(User user);
+    Task<Entities.User> UpdateAsync(Entities.User user);
 
     /// <summary>
     /// Deletes a user from the system

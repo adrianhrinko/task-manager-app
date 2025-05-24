@@ -11,10 +11,10 @@ namespace UserService.Application.Auth;
 
 public class KeycloakAuthService(HttpClient httpClient, IUserRepository userRepository, IConfiguration config, ILogger<KeycloakAuthService> logger) : IAuthService
 {
-    public async Task<bool> RegisterUserAsync(UserRegistration registration)
+    public async Task<User?> RegisterUserAsync(UserRegistration registration)
     {
         var adminToken = await GetClientAccessTokenAsync();
-        if (adminToken == null) return false;
+        if (adminToken == null) return null;
 
         var keycloakUrl = $"admin/realms/{config["Keycloak:Realm"]}/users";
 
@@ -37,15 +37,19 @@ public class KeycloakAuthService(HttpClient httpClient, IUserRepository userRepo
 
         var response = await httpClient.PostAsync(keycloakUrl, content);
         
-        var now = DateTime.UtcNow;
-        var user = await userRepository.CreateAsync(new User(Guid.Empty, registration.Email, registration.FirstName, registration.LastName, now, now));
-        return response.IsSuccessStatusCode;
+        if (response.IsSuccessStatusCode)
+        {
+            var now = DateTime.UtcNow;
+            return await userRepository.CreateAsync(new UserService.Domain.Entities.User(Guid.Empty, registration.Email, registration.FirstName, registration.LastName, now, now));
+        }
+        
+        return null;
     }
 
-    public async Task<AuthToken> LoginUserAsync(UserLogin model)
+    public async Task<AuthToken?> LoginUserAsync(UserLogin model)
     {
         var keycloakUrl = $"realms/{config["Keycloak:Realm"]}/protocol/openid-connect/token";
-        logger.LogInformation("lososka");
+
         var formData = new Dictionary<string, string>
         {
             { "client_id", config["Keycloak:ClientId"] },

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\Shared.API\Shared.API.csproj" />
+    <ProjectReference Include="..\TaskService.Application\TaskService.Application.csproj" />
   </ItemGroup>
 
   <Target Name="SwaggerToFile" AfterTargets="Build" Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' != 'true'">

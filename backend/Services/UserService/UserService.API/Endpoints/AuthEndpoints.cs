@@ -13,7 +13,7 @@ public static class AuthEndpoints
         group.MapPost("/register", async (UserRegistrationDto registration, IAuthService authService) =>
         {
             var result = await authService.RegisterUserAsync(registration.Map());
-            return result ? Results.Ok("User registered successfully") : Results.BadRequest("Failed to register user");
+            return result is not null ? Results.Ok(result.Map()) : Results.BadRequest("Failed to register user");
         });
 
         group.MapPost("/login", async (UserLoginDto login, IAuthService authService) =>
