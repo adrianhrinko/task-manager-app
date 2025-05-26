@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using TaskService.Domain.Entities;
 using TaskService.Domain.Repositories;
 
@@ -10,35 +11,35 @@ public static class TaskEndpoints
         var group = routes.MapGroup("tasks");
 
         // Get task by ID
-        group.MapGet("/{id}", async (Guid id, ITaskRepository repository) =>
+        group.MapGet("/{id}", async ([FromRoute] Guid id, ITaskRepository repository) =>
         {
             var task = await repository.GetByIdAsync(id);
             return task is null ? Results.NotFound() : Results.Ok(task);
         });
 
         // Get tasks by epic ID
-        group.MapGet("/epic/{epicId}", async (Guid epicId, ITaskRepository repository) =>
+        group.MapGet("/epic/{epicId}", async ([FromRoute] Guid epicId, ITaskRepository repository) =>
         {
             var tasks = await repository.GetByEpicIdAsync(epicId);
             return Results.Ok(tasks);
         });
 
         // Get tasks by project ID
-        group.MapGet("/project/{projectId}", async (Guid projectId, ITaskRepository repository) =>
+        group.MapGet("/project/{projectId}", async ([FromRoute] Guid projectId, ITaskRepository repository) =>
         {
             var tasks = await repository.GetByProjectIdAsync(projectId);
             return Results.Ok(tasks);
         });
 
         // Create new task
-        group.MapPost("/", async (TaskItem task, ITaskRepository repository) =>
+        group.MapPost("/", async ([FromBody] TaskItem task, ITaskRepository repository) =>
         {
             var createdTask = await repository.AddAsync(task);
             return Results.Created($"/tasks/{createdTask.Id}", createdTask);
         });
 
         // Update existing task
-        group.MapPut("/{id}", async (Guid id, TaskItem task, ITaskRepository repository) =>
+        group.MapPut("/{id}", async ([FromRoute] Guid id, [FromBody] TaskItem task, ITaskRepository repository) =>
         {
             if (id != task.Id)
                 return Results.BadRequest("ID mismatch");
@@ -55,7 +56,7 @@ public static class TaskEndpoints
         });
 
         // Delete task
-        group.MapDelete("/{id}", async (Guid id, ITaskRepository repository) =>
+        group.MapDelete("/{id}", async ([FromRoute] Guid id, ITaskRepository repository) =>
         {
             if (!await repository.ExistsAsync(id))
                 return Results.NotFound();

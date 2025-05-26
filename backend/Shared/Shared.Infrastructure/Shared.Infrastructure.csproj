@@ -11,8 +11,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="EasyNetQ" Version="8.0.0-beta99" />
+      <PackageReference Include="EasyNetQ.Serialization.SystemTextJson" Version="8.0.0-beta99" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="9.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.1" />
     </ItemGroup>
 
 </Project>

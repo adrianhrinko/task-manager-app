@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Shared.API.ExceptionHandling;
 using Shared.API.OpenApi;
+using Shared.Domain.Entities;
 using UserService.API.Endpoints;
 using UserService.Application;
 

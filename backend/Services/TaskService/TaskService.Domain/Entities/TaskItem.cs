@@ -15,7 +15,7 @@ public class TaskItem(
     DateTime? scheduledAt,
     DateTime? due,
     State state = State.New,
-    User? assignedTo = null)
+    Shared.Domain.Entities.User? assignedTo = null)
 {
     public Guid Id { get; set; } = id;
     public string Title { get; set; } = title;
@@ -30,5 +30,5 @@ public class TaskItem(
 
     public DateTime UpdatedAt { get; set; } = updatedAt;
 
-    public User? AssignedTo { get; set; } = assignedTo;
+    public Shared.Domain.Entities.User? AssignedTo { get; set; } = assignedTo;
 }

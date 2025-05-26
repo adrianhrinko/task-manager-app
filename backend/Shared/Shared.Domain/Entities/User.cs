@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Shared.Domain;
+namespace Shared.Domain.Entities;
 
 public class User(Guid id, string email, string firstName, string lastName)
 {

@@ -7,7 +7,7 @@ using TaskService.Application;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration
-    .AddEnvironmentVariables(); 
+    .AddEnvironmentVariables();
 
 builder.Services.AddApiVersioning(options =>
     {
@@ -15,7 +15,7 @@ builder.Services.AddApiVersioning(options =>
         options.AssumeDefaultVersionWhenUnspecified = true;
         options.ReportApiVersions = true;
     })
-    .AddApiExplorer(options => 
+    .AddApiExplorer(options =>
     {
         options.GroupNameFormat = "'v'V";
         options.SubstituteApiVersionInUrl = true;

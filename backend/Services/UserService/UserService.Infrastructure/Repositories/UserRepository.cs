@@ -11,25 +11,25 @@ namespace UserService.Infrastructure.Repositories;
 
 public class UserRepository(UserDbContext context) : IUserRepository
 {
-    public async Task<Domain.Entities.User?> GetByIdAsync(Guid id)
+    public async Task<Domain.Entities.User?> GetByIdAsync(Guid id, CancellationToken ct)
     {
         var userEntity = await context.Users
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Id == id);
+            .FirstOrDefaultAsync(u => u.Id == id, ct);
 
         return userEntity?.Map();
     }
 
-    public async Task<Domain.Entities.User?> GetByEmailAsync(string email)
+    public async Task<Domain.Entities.User?> GetByEmailAsync(string email, CancellationToken ct)
     {
         var userEntity = await context.Users
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Email == email);
+            .FirstOrDefaultAsync(u => u.Email == email, ct);
         
         return userEntity?.Map();
     }
 
-    public Task<PagedList<Domain.Entities.User>> GetAllAsync(Query query)
+    public Task<PagedList<Domain.Entities.User>> GetAllAsync(Query query, CancellationToken ct)
     {
         IQueryable<Database.Entities.User> userQuery = context.Users.AsNoTracking();
         
@@ -48,10 +48,10 @@ public class UserRepository(UserDbContext context) : IUserRepository
 
         userQuery = userQuery.ApplyQuery(query, filterMappings, sortMappings);
         
-        return userQuery.ApplyPaging<Database.Entities.User, Domain.Entities.User>(query, u => u.Map());
+        return userQuery.ApplyPaging<Database.Entities.User, Domain.Entities.User>(query, u => u.Map(), ct);
     }
     
-    public Task<PagedList<Domain.Entities.Team>> GetTeamsAsync(Guid userId, Query query)
+    public Task<PagedList<Domain.Entities.Team>> GetTeamsAsync(Guid userId, Query query, CancellationToken ct)
     {
         var teamsQuery = context.UserTeamRoles
             .AsNoTracking()
@@ -73,23 +73,24 @@ public class UserRepository(UserDbContext context) : IUserRepository
         
         teamsQuery = teamsQuery.ApplyQuery(query, filterMappings, sortMappings);
         
-        return teamsQuery.ApplyPaging<UserTeamRole, Domain.Entities.Team>(query, utr => utr.MapToTeam());
+        return teamsQuery.ApplyPaging<UserTeamRole, Domain.Entities.Team>(query, utr => utr.MapToTeam(), ct);
     }
 
-    public async Task<Domain.Entities.User> CreateAsync(Domain.Entities.User user)
+    public async Task<Domain.Entities.User> CreateAsync(Domain.Entities.User user, CancellationToken ct)
     {
         user.CreatedAt = DateTime.UtcNow;
         user.UpdatedAt = DateTime.UtcNow;
         
-        context.Users.Add(user.Map());
-        await context.SaveChangesAsync();
+        var userEntity = user.Map();
+        var entry = context.Users.Add(userEntity);
+        await context.SaveChangesAsync(ct);
         
-        return user;
+        return entry.Entity.Map();
     }
 
-    public async Task<Domain.Entities.User> UpdateAsync(Domain.Entities.User user)
+    public async Task<Domain.Entities.User> UpdateAsync(Domain.Entities.User user, CancellationToken ct)
     {
-        var existingUser = await context.Users.FindAsync(user.Id);
+        var existingUser = await context.Users.FindAsync(user.Id, ct);
         if (existingUser == null)
             throw new KeyNotFoundException($"User with ID {user.Id} not found");
 
@@ -99,28 +100,28 @@ public class UserRepository(UserDbContext context) : IUserRepository
         newUser.UpdatedAt = DateTime.UtcNow;
 
         context.Entry(existingUser).CurrentValues.SetValues(newUser);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(ct);
 
         return newUser.Map();
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id, CancellationToken ct)
     {
         var user = await context.Users.FindAsync(id);
         if (user == null)
             throw new KeyNotFoundException($"User with ID {id} not found");
 
         context.Users.Remove(user);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(ct);
     }
 
-    public async Task<bool> ExistsAsync(Guid id)
+    public async Task<bool> ExistsAsync(Guid id, CancellationToken ct)
     {
-        return await context.Users.AsNoTracking().AnyAsync(u => u.Id == id);
+        return await context.Users.AsNoTracking().AnyAsync(u => u.Id == id, ct);
     }
 
-    public async Task<bool> ExistsByEmailAsync(string email)
+    public async Task<bool> ExistsByEmailAsync(string email, CancellationToken ct)
     {
-        return await context.Users.AsNoTracking().AnyAsync(u => u.Email == email);
+        return await context.Users.AsNoTracking().AnyAsync(u => u.Email == email, ct);
     }
 }

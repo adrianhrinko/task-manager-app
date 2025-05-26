@@ -12,16 +12,16 @@ namespace UserService.Infrastructure.Repositories;
 
 public class TeamRepository(UserDbContext context) : ITeamRepository
 {
-    public async Task<Domain.Entities.Team?> GetByIdAsync(Guid id)
+    public async Task<Domain.Entities.Team?> GetByIdAsync(Guid id, CancellationToken ct)
     {
         var teamEntity =  await context.Teams
             .AsNoTracking()
-            .FirstOrDefaultAsync(t => t.Id == id);
+            .FirstOrDefaultAsync(t => t.Id == id, ct);
         
         return teamEntity?.Map();
     }
 
-    public  Task<PagedList<Domain.Entities.Team>> GetAllAsync(Query query)
+    public  Task<PagedList<Domain.Entities.Team>> GetAllAsync(Query query, CancellationToken ct)
     {
         var teamQuery = context.Teams.AsNoTracking();
         
@@ -38,10 +38,10 @@ public class TeamRepository(UserDbContext context) : ITeamRepository
         
         teamQuery = teamQuery.ApplyQuery<Team>(query, filterMappings, sortMappings);
 
-        return teamQuery.ApplyPaging(query, t => t.Map());
+        return teamQuery.ApplyPaging(query, t => t.Map(), ct);
     }
 
-    public async Task<Domain.Entities.Team> CreateAsync(Guid userId, Domain.Entities.Team team)
+    public async Task<Domain.Entities.Team> CreateAsync(Guid userId, Domain.Entities.Team team, CancellationToken ct)
     {
         team.CreatedAt = DateTime.UtcNow;
         team.UpdatedAt = DateTime.UtcNow;
@@ -56,14 +56,14 @@ public class TeamRepository(UserDbContext context) : ITeamRepository
             Role = TeamRole.Owner
         });
         
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(ct);
 
         return teamEntity.Map();
     }
 
-    public async Task<Domain.Entities.Team> UpdateAsync(Domain.Entities.Team team)
+    public async Task<Domain.Entities.Team> UpdateAsync(Domain.Entities.Team team, CancellationToken ct)
     {
-        var existingTeam = await context.Teams.FindAsync(team.Id);
+        var existingTeam = await context.Teams.FindAsync(team.Id, ct);
         if (existingTeam == null)
             throw new KeyNotFoundException($"Team with ID {team.Id} not found");
 
@@ -73,12 +73,12 @@ public class TeamRepository(UserDbContext context) : ITeamRepository
         newTeam.UpdatedAt = DateTime.UtcNow;
 
         context.Entry(existingTeam).CurrentValues.SetValues(newTeam);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(ct);
 
         return newTeam.Map();
     }
     
-    public Task<PagedList<Domain.Entities.TeamMember>> GetTeamMembersAsync(Guid teamId, Query query)
+    public Task<PagedList<Domain.Entities.TeamMember>> GetTeamMembersAsync(Guid teamId, Query query, CancellationToken ct)
     {
         var memberQuery = context.UserTeamRoles
             .AsNoTracking()
@@ -102,22 +102,22 @@ public class TeamRepository(UserDbContext context) : ITeamRepository
         
         memberQuery = memberQuery.ApplyQuery(query, filterMappings, sortMappings);
         
-        return memberQuery.ApplyPaging(query, m => m.MapToTeamMember());
+        return memberQuery.ApplyPaging(query, m => m.MapToTeamMember(), ct);
     }
 
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id, CancellationToken ct)
     {
-        var team = await context.Teams.FindAsync(id);
+        var team = await context.Teams.FindAsync(id, ct);
         if (team == null)
             throw new KeyNotFoundException($"Team with ID {id} not found");
 
         context.Teams.Remove(team);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(ct);
     }
 
-    public async Task<bool> ExistsAsync(Guid id)
+    public async Task<bool> ExistsAsync(Guid id, CancellationToken ct)
     {
-        return await context.Teams.AsNoTracking().AnyAsync(t => t.Id == id);
+        return await context.Teams.AsNoTracking().AnyAsync(t => t.Id == id, ct);
     }
 }

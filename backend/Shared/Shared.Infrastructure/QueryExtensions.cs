@@ -26,7 +26,7 @@ public static class QueryExtensions
         return dbQuery;
     }
 
-    public static async Task<PagedList<T2>> ApplyPaging<T1, T2>(this IQueryable<T1> source, Query query, Func<T1, T2> mapFunc) 
+    public static async Task<PagedList<T2>> ApplyPaging<T1, T2>(this IQueryable<T1> source, Query query, Func<T1, T2> mapFunc, CancellationToken ct) 
         where T1: class
         where T2: class
     {
@@ -34,7 +34,7 @@ public static class QueryExtensions
         var items = await source.Skip((query.PageNo - 1) * query.PageSize)
             .Take(query.PageSize)
             .Select(i => mapFunc(i))
-            .ToListAsync();
+            .ToListAsync(ct);
 
         return new PagedList<T2>(items, query.PageNo, query.PageSize, total);
     }

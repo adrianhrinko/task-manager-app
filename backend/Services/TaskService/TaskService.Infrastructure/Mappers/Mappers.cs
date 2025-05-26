@@ -94,7 +94,7 @@ public static class Mappers
             state: epic.State
         );
     
-    public static User Map(this Shared.Domain.User user)
+    public static User Map(this Shared.Domain.Entities.User user)
         => new()
             {
                 Id = user.Id,
@@ -102,12 +102,26 @@ public static class Mappers
                 FirstName = user.FirstName,
                 LastName = user.LastName,
             };
+    
 
-    public static Shared.Domain.User Map(this User user)
+    public static Shared.Domain.Entities.User Map(this User user)
         => new(
             id: user.Id,
             email: user.Email,
             firstName: user.FirstName,
             lastName: user.LastName
+        );
+    
+    public static Team Map(this Shared.Domain.Entities.Team team)
+        => new()
+        {
+            Id = team.Id,
+            Name = team.Name
+        };
+
+    public static Shared.Domain.Entities.Team Map(this Team team)
+        => new(
+            id: team.Id,
+            name: team.Name
         );
 }

@@ -93,11 +93,8 @@ services:
       - db-server
       - rabbitmq
     environment:
-      - ConnectionStrings__TaskDb=Server=db-server;Database=TaskDb;User Id=sa;Password=${DB_PASSWORD:-YourStrong!Passw0rd};TrustServerCertificate=True;
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_USER=${RMQ_USER:-admin}
-      - RABBITMQ_PASS=${RMQ_PASSWORD:-YourStrong!Passw0rd}
+      - ConnectionStrings__TaskDb=Server=db-server;Database=TaskDb;User Id=sa;Password=${DB_PASSWORD:-YourStrong!Passw0rd};TrustServerCertificate=True
+      - ConnectionStrings__RabbitMq=host=rabbitmq;port=5672;username=${RMQ_USER:-admin};password=${RMQ_PASSWORD:-YourStrong!Passw0rd;publisherConfirms=true
     ports:
       - "8082:8080"
     networks:
@@ -114,11 +111,9 @@ services:
       - db-server
       - rabbitmq
     environment:
-      - ConnectionStrings__UserDb=Server=db-server;Database=UserDB;User Id=sa;Password=${DB_PASSWORD:-YourStrong!Passw0rd};TrustServerCertificate=True;
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_USER=${RMQ_USER:-admin}
-      - RABBITMQ_PASS=${RMQ_PASSWORD:-YourStrong!Passw0rd}
+      - ConnectionStrings__UserDb=Server=db-server;Database=UserDB;User Id=sa;Password=${DB_PASSWORD:-YourStrong!Passw0rd};TrustServerCertificate=True
+      - ConnectionStrings__RabbitMq=host=rabbitmq;port=5672;username=${RMQ_USER:-admin};password=${RMQ_PASSWORD:-YourStrong!Passw0rd;publisherConfirms=true
+
       - Keycloak__Url=http://keycloak:8080
       - Keycloak__Realm=task-manager
       - Keycloak__ClientId=admin

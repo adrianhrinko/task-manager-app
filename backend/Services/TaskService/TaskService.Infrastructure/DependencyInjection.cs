@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Infrastructure;
 using TaskService.Domain.Repositories;
+using TaskService.Infrastructure.BGServices;
 using TaskService.Infrastructure.Database;
 using TaskService.Infrastructure.Repositories;
 
@@ -16,11 +18,16 @@ public static class DependencyInjection
         {
             options.UseSqlServer(configuration.GetConnectionString("TaskDb"));
         });
-
+        
+        services.AddRabbitMqSubscriber(configuration);
         services.AddScoped<ITaskRepository, TaskRepository>();
         services.AddScoped<IEpicRepository, EpicRepository>();
         services.AddScoped<IProjectRepository, ProjectRepository>();
-
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ITaskRepository, TaskRepository>();
+        
+        services.AddHostedService<MessageSubscriptionService>();
+        
         return services;
     }
     

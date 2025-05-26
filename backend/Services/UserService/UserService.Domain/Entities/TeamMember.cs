@@ -9,7 +9,7 @@ public class TeamMember(
     string lastName,
     string email,
     TeamRole role,
-    DateTime assignedDate) : Shared.Domain.User(userId, firstName, lastName, email)
+    DateTime assignedDate) : Shared.Domain.Entities.User(userId, firstName, lastName, email)
 {
     public Guid TeamId { get; set; } = teamId;
     public TeamRole Role { get; set; } = role;
